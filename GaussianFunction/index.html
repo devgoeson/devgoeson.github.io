@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+    <meta charset="utf-8" />
+    <title>TypeScript HTML App</title>
+    <script type="text/javascript" src="./three.js"></script>
+    <script src="./util/OrbitControls.js"></script>
+    <script type="text/javascript" src="./dat.gui.js"></script>
+    <script type="text/javascript" src="./lib/MyRenderer.js"></script>
+
+    <script type="x-shader/x-vertex" id="vertexShader">
+        #define M_PI 3.1415926535897932384626433832795
+        uniform float amp;
+        uniform float sigma2;
+
+        float gauss( in float x, in float sigma2 )
+        {
+            float coeff = 1.0 / ( M_PI * sigma2 );
+            float expon = -( x*x ) / ( 2.0 * sigma2 );
+            return coeff*exp( expon );
+        }
+
+        void main() {
+            vec3 temp = position.xyz;
+            float dist = sqrt( temp.x * temp.x + temp.z * temp.z );
+            temp.y += amp * gauss( dist, sigma2 );
+            gl_Position = projectionMatrix * modelViewMatrix * vec4( temp, 1.0 );
+        }
+    </script>
+    <script type="x-shader/x-fragment" id="fragmentShader">
+        void main() {
+           gl_FragColor = vec4( 0.1, 0.8, 0.3, 1.0 );
+        }
+    </script>
+    <script type="text/javascript" src="app.js"></script>
+</head>
+<body>
+    <div id="viewport"></div>
+</body>
+</html>
