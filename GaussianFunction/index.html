@@ -23,7 +23,7 @@
 
         float gauss( in float x, in float sigma2 )
         {
-            float coeff = 1.0 / ( M_PI * sigma2 );
+            float coeff = 1.0 / ( 2.0 * M_PI * sigma2 );
             float expon = -( x*x ) / ( 2.0 * sigma2 );
             return coeff*exp( expon );
         }

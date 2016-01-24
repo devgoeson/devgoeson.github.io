@@ -20,7 +20,7 @@ var Linear = (function () {
         var fov = 60;
         var aspect = window.innerWidth / window.innerHeight;
         this.camera = new THREE.PerspectiveCamera(fov, aspect);
-        this.camera.position.set(10, 10, 10);
+        this.camera.position.set(8, 8, 8);
         this.camera.up.set(0, 1, 0);
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
         // Create a scene
