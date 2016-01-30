@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+    <meta charset="utf-8" />
+    <title>TypeScript HTML App</title>
+    <script type="text/javascript" src="./three.js"></script>
+    <script src="./util/OrbitControls.js"></script>
+    <script type="text/javascript" src="./dat.gui.js"></script>
+    <script type="text/javascript" src="./lib/MyRenderer.js"></script>
+
+    <script type="x-shader/x-vertex" id="vertexShader">
+        uniform float spherical;
+        void main() {
+            mat4 tempMVMtx = modelViewMatrix;
+            tempMVMtx[0] = vec4( 1.0, 0.0, 0.0, tempMVMtx[0].w );
+            if( spherical != 0.0 )
+                tempMVMtx[1] = vec4( 0.0, 1.0, 0.0, tempMVMtx[1].w );
+            tempMVMtx[2] = vec4( 0.0, 0.0, 1.0, tempMVMtx[2].w );
+
+            gl_Position = projectionMatrix * tempMVMtx * vec4( position, 1.0 );
+        }
+    </script>
+    <script type="x-shader/x-fragment" id="fragmentShader">
+        void main() {
+           gl_FragColor = vec4( 0.2, 0.8, 0.3, 1.0 );
+        }
+    </script>
+    <script type="text/javascript" src="app.js"></script>
+</head>
+<body>
+    <div id="viewport"></div>
+</body>
+</html>
