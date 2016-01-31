@@ -224,7 +224,7 @@ window.onload = function () {
         set_attribute(vVBOList, pAttLocation, pAttStride);
         gl.uniform2fv(pUniLocation[0], resolution);
         gl.uniform1i(pUniLocation[1], 0);
-        gl.uniform1f(pUniLocation[2], velocity);
+        gl.uniform1f(pUniLocation[2], velocity * 1.5);
         gl.uniform4fv(pUniLocation[3], ambient);
         gl.drawArrays(gl.POINTS, 0, vertices.length);
 
