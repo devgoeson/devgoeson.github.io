@@ -1,0 +1,95 @@
+﻿<html>
+<head>
+    <title>GPU Particle</title>
+    <script src="https://wgld.org/j/minMatrixb.js" type="text/javascript"></script>
+    <script src="script.js" type="text/javascript"></script>
+
+    <script id="point_vs" type="x-shader/x-vertex">
+        attribute float index;
+        uniform vec2 resolution;
+        uniform sampler2D texture;
+        uniform float pointScale;
+        void main(){
+        vec2 p = vec2(
+        mod(index, resolution.x) / resolution.x,
+        floor(index / resolution.x) / resolution.y
+        );
+        vec4 t = texture2D(texture, p);
+        gl_Position  = vec4(t.xy, 0.0, 1.0);
+        gl_PointSize = 0.1 + pointScale;
+        }
+    </script>
+
+    <script id="point_fs" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform vec4 ambient;
+        void main(){
+        gl_FragColor = ambient;
+        }
+    </script>
+
+    <script id="velocity_vs" type="x-shader/x-vertex">
+        attribute vec3 position;
+        void main(){
+        gl_Position = vec4(position, 1.0);
+        }
+    </script>
+
+    <script id="velocity_fs" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform vec2 resolution;
+        uniform sampler2D texture;
+        uniform vec2 mouse;
+        uniform vec2 mouse2;
+        uniform float velocity;
+        uniform float fluence[3];
+        uniform vec2 mousePos[3];
+        const float SPEED = 0.05;
+
+        vec2 calcNewVec( in vec2 mouse, in vec4 pos_vec, float fluence ) {
+            return normalize(mouse - pos_vec.xy) * fluence;
+        }
+        void main(){
+            vec2 p = gl_FragCoord.xy / resolution;
+            vec4 t = texture2D(texture, p);
+            if( velocity == 0.0 ) {
+                gl_FragColor = t;
+            }
+            else {
+                vec2 w0 = calcNewVec( mousePos[0],  t, fluence[0] );
+                vec2 w1 = calcNewVec( mousePos[1], t, fluence[1] );
+                vec2 w2 = calcNewVec( mousePos[2], t, fluence[2] );
+                w0 = normalize( t.zw + w0 + w1 + w2 );
+                vec4 destColor = vec4(t.xy + w0 * SPEED * velocity, w0);
+                gl_FragColor = destColor;
+            }
+        }
+    </script>
+
+    <script id="default_vs" type="x-shader/x-vertex">
+        attribute vec3 position;
+        void main(){
+        gl_Position = vec4(position, 1.0);
+        }
+    </script>
+
+    <script id="default_fs" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform vec2 resolution;
+        void main(){
+        vec2 p = (gl_FragCoord.xy / resolution) * 2.0 - 1.0;
+        gl_FragColor = vec4(p, 0.0, 0.0);
+        }
+    </script>
+
+    <style>
+        * {
+            margin: 0 auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+</html>
